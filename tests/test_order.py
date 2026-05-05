@@ -1,4 +1,5 @@
 import pytest
+import allure
 from pages.order_page import OrderPage
 
 order_data_set1 = {
@@ -21,11 +22,15 @@ order_data_set2 = {
     "rental_period": "четверо суток"
 }
 
-@pytest.mark.parametrize("order_data, use_top_button", [
-    (order_data_set1, True),
-    (order_data_set2, False)
-])
-def test_successful_order(driver, order_data, use_top_button):
-    order_page = OrderPage(driver)
-    success_text = order_page.create_order(order_data, top=use_top_button)
-    assert "Заказ оформлен" in success_text
+@allure.feature("Заказ самоката")
+class TestOrder:
+
+    @allure.title("Проверка успешного заказа через разные кнопки")
+    @pytest.mark.parametrize("order_data, use_top_button", [
+        (order_data_set1, True),
+        (order_data_set2, False)
+    ])
+    def test_successful_order(self, driver, order_data, use_top_button):
+        order_page = OrderPage(driver)
+        success_text = order_page.create_order(order_data, top=use_top_button)
+        assert "Заказ оформлен" in success_text
