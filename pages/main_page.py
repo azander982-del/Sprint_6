@@ -1,7 +1,7 @@
 from locators import QUESTION_BUTTONS, ANSWER_TEXTS, COOKIE_BUTTON, LOGO_MAIN, YANDEX_LOGO
 from pages.base_page import BasePage
 import allure
-import time
+from selenium.webdriver.common.action_chains import ActionChains
 
 class MainPage(BasePage):
     @allure.step("Закрыть куки")
@@ -14,9 +14,11 @@ class MainPage(BasePage):
         buttons = self.wait_for_all_elements(QUESTION_BUTTONS)
         button = buttons[index]
         self.scroll_to_element(button)
-        time.sleep(0.5) # понимаю, что использовать слип это моветон, но никак не могу понять, как без него. 3 разных варианта пробовал - всё равно падает тест(нейронка говорит надо JS юзать - такого в теории не было, а вот слип был)
+        ActionChains(self.driver).move_to_element(button).perform()
+        self.wait_for_element_object_to_be_clickable(button)
         button.click()
         self.wait_for_text_not_empty(ANSWER_TEXTS, index)
+        
     @allure.step("Получить ответ на вопрос")
     def get_answer_text(self, index):
         answers = self.wait_for_all_elements(ANSWER_TEXTS)
@@ -33,6 +35,4 @@ class MainPage(BasePage):
         self.driver.switch_to.window(self.driver.window_handles[1])
         self.wait_for_url_contains("dzen.ru")
 
-    @allure.step("Получить текущий URL")
-    def get_current_url(self):
-        return self.driver.current_url
+    
