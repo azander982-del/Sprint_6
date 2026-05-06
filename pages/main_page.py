@@ -32,7 +32,7 @@ class MainPage(BasePage):
     def click_yandex_logo_and_switch_to_dzen(self):
         self.click_element(YANDEX_LOGO)
         self.wait_for_new_window(2)
-        self.driver.switch_to.window(self.driver.window_handles[1])
+        self.switch_to_window_by_index(1)
         self.wait_for_url_contains("dzen.ru")
 
     
